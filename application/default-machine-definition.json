@@ -1,0 +1,8 @@
+{
+    "name": "{name}",
+    "memory": 2048,
+    "efi": true,
+    "cpu": {
+        "cores": 0
+    }
+}

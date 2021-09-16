@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file>default-machine-definition.json</file>
+    </qresource>
+</RCC>
