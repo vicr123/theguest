@@ -87,6 +87,7 @@ GuestWindow::GuestWindow(QString guest, QWidget* parent) :
 
     QJsonObject definition = GuestManager::instance()->guestSettings(guest);
     ui->displayButton->setText(definition.value("name").toString());
+    this->setWindowTitle(definition.value("name").toString());
 
     ui->stackedWidget->addWidget(d->videoPage = new GuestVideo(guest));
     ui->stackedWidget->addWidget(d->settingsPage = new GuestSettings(guest));

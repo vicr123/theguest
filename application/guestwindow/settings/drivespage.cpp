@@ -90,7 +90,7 @@ void DrivesPage::on_listView_customContextMenuRequested(const QPoint& pos) {
     QMenu* menu = new QMenu(this);
     if (selected.count() == 1) {
         menu->addSection(tr("For this disk"));
-        menu->addAction(QIcon::fromTheme("list-remove"), tr("Remove"), [ = ] {
+        menu->addAction(QIcon::fromTheme("edit-delete"), tr("Remove"), [ = ] {
             d->model->removeDrive(ui->listView->selectionModel()->selectedIndexes().first());
         });
     }

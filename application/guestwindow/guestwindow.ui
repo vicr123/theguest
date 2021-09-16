@@ -11,7 +11,11 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string notr="true">MainWindow</string>
+  </property>
+  <property name="windowIcon">
+   <iconset theme="theguest" resource="../resources.qrc">
+    <normaloff>:/icons/theguest.svg</normaloff>:/icons/theguest.svg</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
    <property name="autoFillBackground">
@@ -73,8 +77,8 @@
           <string/>
          </property>
          <property name="icon">
-          <iconset theme="the24">
-           <normaloff>:/icons/the24.svg</normaloff>:/icons/the24.svg</iconset>
+          <iconset theme="theguest" resource="../resources.qrc">
+           <normaloff>:/icons/theguest.svg</normaloff>:/icons/theguest.svg</iconset>
          </property>
          <property name="popupMode">
           <enum>QToolButton::InstantPopup</enum>
@@ -179,7 +183,8 @@
   </action>
   <action name="actionPower_On">
    <property name="icon">
-    <iconset theme="media-playback-start"/>
+    <iconset theme="media-playback-start">
+     <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
     <string>Power On</string>
@@ -187,7 +192,8 @@
   </action>
   <action name="actionForce_Stop">
    <property name="icon">
-    <iconset theme="application-exit"/>
+    <iconset theme="application-exit">
+     <normaloff>.</normaloff>.</iconset>
    </property>
    <property name="text">
     <string>Force Stop</string>
@@ -205,6 +211,8 @@
    </slots>
   </customwidget>
  </customwidgets>
- <resources/>
+ <resources>
+  <include location="../resources.qrc"/>
+ </resources>
  <connections/>
 </ui>

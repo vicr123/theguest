@@ -1,5 +1,7 @@
 <RCC>
     <qresource prefix="/">
         <file>default-machine-definition.json</file>
+        <file>icons/theguest.svg</file>
+        <file>icons/aboutsplash.svg</file>
     </qresource>
 </RCC>

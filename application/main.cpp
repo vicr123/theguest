@@ -45,6 +45,7 @@ int main(int argc, char* argv[]) {
 //    a.setApplicationUrl(tApplication::HelpContents, QUrl("https://help.vicr123.com/docs/theguest/intro"));
     a.setApplicationUrl(tApplication::Sources, QUrl("http://github.com/vicr123/theGuest"));
     a.setApplicationUrl(tApplication::FileBug, QUrl("http://github.com/vicr123/theGuest/issues"));
+    a.addCopyrightLine(QApplication::translate("main", "Parts of this application are possible due to the work of Lindsay Mathieson."));
 #ifdef T_BLUEPRINT_BUILD
     a.setApplicationIcon(QIcon(":/icons/theguest-blueprint.svg"));
     a.setApplicationName("theGuest Blueprint");

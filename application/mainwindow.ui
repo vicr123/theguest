@@ -11,7 +11,11 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>theGuest</string>
+  </property>
+  <property name="windowIcon">
+   <iconset theme="theguest" resource="resources.qrc">
+    <normaloff>:/icons/theguest.svg</normaloff>:/icons/theguest.svg</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
    <property name="autoFillBackground">
@@ -73,8 +77,8 @@
           <string/>
          </property>
          <property name="icon">
-          <iconset theme="the24">
-           <normaloff>:/icons/the24.svg</normaloff>:/icons/the24.svg</iconset>
+          <iconset theme="theguest" resource="resources.qrc">
+           <normaloff>:/icons/theguest.svg</normaloff>:/icons/theguest.svg</iconset>
          </property>
          <property name="popupMode">
           <enum>QToolButton::InstantPopup</enum>
@@ -214,6 +218,8 @@
    </slots>
   </customwidget>
  </customwidgets>
- <resources/>
+ <resources>
+  <include location="resources.qrc"/>
+ </resources>
  <connections/>
 </ui>

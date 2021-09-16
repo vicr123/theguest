@@ -88,8 +88,14 @@ void GuestItem::mouseReleaseEvent(QMouseEvent* event) {
 void GuestItem::contextMenuEvent(QContextMenuEvent* event) {
     QMenu* menu = new QMenu(this);
     menu->addSection(tr("For this Virtual Machine"));
-    menu->addAction(QIcon::fromTheme("list-remove"), tr("Delete"), [ = ] {
-
+    QAction* powerOnAction = menu->addAction(QIcon::fromTheme("media-playback-start"), tr("Power On"), [ = ] {
+        d->session->start();
+    });
+    QAction* powerOffAction = menu->addAction(QIcon::fromTheme("application-exit"), tr("Force Stop"), [ = ] {
+        d->session->forceStop();
+    });
+    menu->addSeparator();
+    menu->addAction(QIcon::fromTheme("edit-delete"), tr("Delete"), [ = ] {
         DeleteMachinePopover* newDrive = new DeleteMachinePopover(d->guest);
         tPopover* popover = new tPopover(newDrive);
         popover->setPopoverWidth(SC_DPI(-200));
@@ -101,6 +107,9 @@ void GuestItem::contextMenuEvent(QContextMenuEvent* event) {
     });
     connect(menu, &QMenu::aboutToHide, menu, &QMenu::deleteLater);
     menu->popup(event->globalPos());
+
+    powerOnAction->setEnabled(d->session->state() == GuestSession::Off);
+    powerOffAction->setEnabled(d->session->state() != GuestSession::Off);
 }
 
 

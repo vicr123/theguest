@@ -117,6 +117,16 @@
     </message>
     <message>
         <location filename="../guestitem.cpp" line="91"/>
+        <source>Power On</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../guestitem.cpp" line="94"/>
+        <source>Force Stop</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../guestitem.cpp" line="98"/>
         <source>Delete</source>
         <translation type="unfinished"></translation>
     </message>
@@ -222,32 +232,27 @@
 <context>
     <name>GuestWindow</name>
     <message>
-        <location filename="../guestwindow/guestwindow.ui" line="14"/>
-        <source>MainWindow</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../guestwindow/guestwindow.ui" line="93"/>
+        <location filename="../guestwindow/guestwindow.ui" line="97"/>
         <source>Display</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../guestwindow/guestwindow.ui" line="119"/>
+        <location filename="../guestwindow/guestwindow.ui" line="123"/>
         <source>Machine Settings</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../guestwindow/guestwindow.ui" line="177"/>
+        <location filename="../guestwindow/guestwindow.ui" line="181"/>
         <source>Close</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../guestwindow/guestwindow.ui" line="185"/>
+        <location filename="../guestwindow/guestwindow.ui" line="190"/>
         <source>Power On</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../guestwindow/guestwindow.ui" line="193"/>
+        <location filename="../guestwindow/guestwindow.ui" line="199"/>
         <source>Force Stop</source>
         <translation type="unfinished"></translation>
     </message>
@@ -279,26 +284,26 @@
     <name>MainWindow</name>
     <message>
         <location filename="../mainwindow.ui" line="14"/>
-        <source>MainWindow</source>
+        <source>theGuest</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="87"/>
+        <location filename="../mainwindow.ui" line="91"/>
         <source>Virtual Machines</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="157"/>
+        <location filename="../mainwindow.ui" line="161"/>
         <source>Create New Virtual Machine</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="200"/>
+        <location filename="../mainwindow.ui" line="204"/>
         <source>Exit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mainwindow.ui" line="203"/>
+        <location filename="../mainwindow.ui" line="207"/>
         <source>Ctrl+Q</source>
         <translation type="unfinished"></translation>
     </message>
@@ -347,6 +352,11 @@
     <message>
         <location filename="../main.cpp" line="39"/>
         <source>QEMU Frontend</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../main.cpp" line="48"/>
+        <source>Parts of this application are possible due to the work of Lindsay Mathieson.</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
