@@ -19,107 +19,106 @@
 #include "qspice-inputs-channel.h"
 
 // Inputs
-void QSpiceHelper::inputs_modifiers(SpiceInputsChannel *spiceinputschannel, gpointer user_data)
-{
+void QSpiceHelper::inputs_modifiers(SpiceInputsChannel* spiceinputschannel, gpointer user_data) {
     Q_UNUSED(spiceinputschannel)
 
-    QSpiceInputsChannel *inputs = static_cast<QSpiceInputsChannel*>(user_data);
-    if ( Q_NULLPTR==inputs ) return;
+    QSpiceInputsChannel* inputs = static_cast<QSpiceInputsChannel*>(user_data);
+    if ( Q_NULLPTR == inputs ) return;
     emit inputs->inputsModifiers();
 }
 
 
-void QSpiceInputsChannel::initCallbacks()
-{
+void QSpiceInputsChannel::initCallbacks() {
     g_signal_connect(gobject, "inputs-modifiers",
-                     GCallback(QSpiceHelper::inputs_modifiers), this);
+        GCallback(QSpiceHelper::inputs_modifiers), this);
 }
 
 void QSpiceInputsChannel::inputsPosition(
-        int x,
-        int y,
-        int display,
-        int button_state)
-{
+    int x,
+    int y,
+    int display,
+    int button_state) {
 #if SPICE_GTK_CHECK_VERSION(0, 35, 0)
     spice_inputs_channel_position(
 #else
     spice_inputs_position(
 #endif
-                static_cast<SpiceInputsChannel*>(gobject), x, y, display, button_state);
+        static_cast<SpiceInputsChannel*>(gobject), x, y, display, button_state);
 }
 
-void QSpiceInputsChannel::inputsButtonPress(int button, int button_state)
-{
+void QSpiceInputsChannel::inputsMotion(int dx, int dy, int button_state) {
+#if SPICE_GTK_CHECK_VERSION(0, 35, 0)
+    spice_inputs_channel_motion(
+#else
+    spice_inputs_motion(
+#endif
+        static_cast<SpiceInputsChannel*>(gobject), dx, dy, button_state);
+}
+
+void QSpiceInputsChannel::inputsButtonPress(int button, int button_state) {
 #if SPICE_GTK_CHECK_VERSION(0, 35, 0)
     spice_inputs_channel_button_press(
 #else
     spice_inputs_button_press(
 #endif
-                static_cast<SpiceInputsChannel*>(gobject),
-                button,
-                button_state);
+        static_cast<SpiceInputsChannel*>(gobject),
+        button,
+        button_state);
 }
 
-void QSpiceInputsChannel::inputsButtonRelease(int button, int button_state)
-{
+void QSpiceInputsChannel::inputsButtonRelease(int button, int button_state) {
 #if SPICE_GTK_CHECK_VERSION(0, 35, 0)
     spice_inputs_channel_button_release(
 #else
     spice_inputs_button_release(
 #endif
-                static_cast<SpiceInputsChannel*>(gobject),
-                button,
-                button_state);
+        static_cast<SpiceInputsChannel*>(gobject),
+        button,
+        button_state);
 }
 
-void QSpiceInputsChannel::inputsKeyPress(uint scancode)
-{
+void QSpiceInputsChannel::inputsKeyPress(uint scancode) {
 #if SPICE_GTK_CHECK_VERSION(0, 35, 0)
     spice_inputs_channel_key_press(
 #else
     spice_inputs_key_press(
 #endif
-                static_cast<SpiceInputsChannel*>(gobject),
-                scancode);
+        static_cast<SpiceInputsChannel*>(gobject),
+        scancode);
 }
 
-void QSpiceInputsChannel::inputsKeyPressAndRelease(uint scancode)
-{
+void QSpiceInputsChannel::inputsKeyPressAndRelease(uint scancode) {
 #if SPICE_GTK_CHECK_VERSION(0, 35, 0)
     spice_inputs_channel_key_press_and_release(
 #else
     spice_inputs_key_press_and_release(
 #endif
-                static_cast<SpiceInputsChannel*>(gobject),
-                scancode);
+        static_cast<SpiceInputsChannel*>(gobject),
+        scancode);
 }
 
-void QSpiceInputsChannel::inputsKeyRelease(uint scancode)
-{
+void QSpiceInputsChannel::inputsKeyRelease(uint scancode) {
 #if SPICE_GTK_CHECK_VERSION(0, 35, 0)
     spice_inputs_channel_key_release(
 #else
     spice_inputs_key_release(
 #endif
-                static_cast<SpiceInputsChannel*>(gobject),
-                scancode);
+        static_cast<SpiceInputsChannel*>(gobject),
+        scancode);
 }
 
-void QSpiceInputsChannel::inputsSetKeyLocks(uint locks)
-{
+void QSpiceInputsChannel::inputsSetKeyLocks(uint locks) {
 #if SPICE_GTK_CHECK_VERSION(0, 35, 0)
     spice_inputs_channel_set_key_locks(
 #else
     spice_inputs_set_key_locks(
 #endif
-                static_cast<SpiceInputsChannel*>(gobject),
-                locks);
+        static_cast<SpiceInputsChannel*>(gobject),
+        locks);
 }
 
 // Qt Keys map of scancodes (platform independent)
-void QSpiceInputsChannel::initScanCodeMap()
-{
+void QSpiceInputsChannel::initScanCodeMap() {
     // SPICE protocol use PC AT scan codes for keyboard
     // See for: https://github.com/CendioOssman/keycodemapdb/blob/master/data/keymaps.csv
 
@@ -578,8 +577,7 @@ void QSpiceInputsChannel::initScanCodeMap()
     scanCodeHash.insert(Qt::Key_Cancel, 0x014a);
 }
 
-void QSpiceInputsChannel::initKeypadScanCodeMap()
-{
+void QSpiceInputsChannel::initKeypadScanCodeMap() {
     keypadScanCodeHash.clear();
     keypadScanCodeHash.insert(Qt::Key_Slash, 0x0135);   // KEY_KPSLASH
     keypadScanCodeHash.insert(Qt::Key_Asterisk, 0x37);  // KEY_KPASTERISK
@@ -614,13 +612,12 @@ void QSpiceInputsChannel::initKeypadScanCodeMap()
     keypadScanCodeHash.insert(Qt::Key_ParenRight, 0x017b);// KEY_KPRIGHTPAREN
 }
 
-void QSpiceInputsChannel::initSequenceScanCodeMap()
-{
+void QSpiceInputsChannel::initSequenceScanCodeMap() {
     // Sequence Scan Code Hash
-    #define ADD_SCAN1(q, s1)    sequenceCodeHash.insert(q, s1);
-    #define ADD_SCAN2(q, s1, s2)    sequenceCodeHash.insert(q, QScanCodeArray(s1, s2));
-    #define ADD_SCAN3(q, s1, s2, s3)    sequenceCodeHash.insert(q, QScanCodeArray(s1, s2, s3));
-    #define ADD_SCAN4(q, s1, s2, s3, s4)    sequenceCodeHash.insert(q, QScanCodeArray(s1, s2, s3, s4));
+#define ADD_SCAN1(q, s1)    sequenceCodeHash.insert(q, s1);
+#define ADD_SCAN2(q, s1, s2)    sequenceCodeHash.insert(q, QScanCodeArray(s1, s2));
+#define ADD_SCAN3(q, s1, s2, s3)    sequenceCodeHash.insert(q, QScanCodeArray(s1, s2, s3));
+#define ADD_SCAN4(q, s1, s2, s3, s4)    sequenceCodeHash.insert(q, QScanCodeArray(s1, s2, s3, s4));
 
     // additional non-keyboard called keys :
     // not applicable in PC AT keyboard,
@@ -638,28 +635,23 @@ void QSpiceInputsChannel::initSequenceScanCodeMap()
 }
 
 // sends scancodes to inputs-channel
-void QSpiceInputsChannel::inputsQKeyPress(int key)
-{
+void QSpiceInputsChannel::inputsQKeyPress(int key) {
     inputsKeyPress(scanCodeHash.value(key));
 }
 
-void QSpiceInputsChannel::inputsQKeyRelease(int key)
-{
+void QSpiceInputsChannel::inputsQKeyRelease(int key) {
     inputsKeyRelease(scanCodeHash.value(key));
 }
 
-void QSpiceInputsChannel::inputsQKeypadKeyPress(int key)
-{
+void QSpiceInputsChannel::inputsQKeypadKeyPress(int key) {
     inputsKeyPress(keypadScanCodeHash.value(key));
 }
 
-void QSpiceInputsChannel::inputsQKeypadKeyRelease(int key)
-{
+void QSpiceInputsChannel::inputsQKeypadKeyRelease(int key) {
     inputsKeyRelease(keypadScanCodeHash.value(key));
 }
 
-QScanCodeArray QSpiceInputsChannel::QSequenceKeyToScanCode(int key)
-{
+QScanCodeArray QSpiceInputsChannel::QSequenceKeyToScanCode(int key) {
     ScanCodeHash::iterator it = sequenceCodeHash.find(key);
     if (it == sequenceCodeHash.end())
         return QScanCodeArray();
@@ -667,15 +659,13 @@ QScanCodeArray QSpiceInputsChannel::QSequenceKeyToScanCode(int key)
         return it.value();
 }
 
-void QSpiceInputsChannel::inputsQSequenceKeyPress(int key)
-{
+void QSpiceInputsChannel::inputsQSequenceKeyPress(int key) {
     QScanCodeArray scanCode = QSequenceKeyToScanCode(key);
     for (int i = 0; i < scanCode.count(); i++)
         inputsKeyPress(scanCode[i]);
 }
 
-void QSpiceInputsChannel::inputsQSequenceKeyRelease(int key)
-{
+void QSpiceInputsChannel::inputsQSequenceKeyRelease(int key) {
     QScanCodeArray scanCode = QSequenceKeyToScanCode(key);
     for (int i = 0; i < scanCode.count(); i++)
         inputsKeyRelease(scanCode[i]);

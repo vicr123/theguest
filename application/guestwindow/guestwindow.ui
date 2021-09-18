@@ -148,6 +148,19 @@
         </spacer>
        </item>
        <item>
+        <widget class="QLabel" name="releaseInstructionsLabel">
+         <property name="enabled">
+          <bool>false</bool>
+         </property>
+         <property name="text">
+          <string>CTRL+ALT to release cursor</string>
+         </property>
+         <property name="margin">
+          <number>3</number>
+         </property>
+        </widget>
+       </item>
+       <item>
         <layout class="QHBoxLayout" name="rightCsdLayout">
          <property name="spacing">
           <number>0</number>

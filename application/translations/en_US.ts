@@ -242,17 +242,22 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../guestwindow/guestwindow.ui" line="181"/>
+        <location filename="../guestwindow/guestwindow.ui" line="156"/>
+        <source>CTRL+ALT to release cursor</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../guestwindow/guestwindow.ui" line="194"/>
         <source>Close</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../guestwindow/guestwindow.ui" line="190"/>
+        <location filename="../guestwindow/guestwindow.ui" line="203"/>
         <source>Power On</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../guestwindow/guestwindow.ui" line="199"/>
+        <location filename="../guestwindow/guestwindow.ui" line="212"/>
         <source>Force Stop</source>
         <translation type="unfinished"></translation>
     </message>

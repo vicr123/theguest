@@ -36,6 +36,10 @@ class GuestVideo : public QWidget {
 
         void sendKeySequence(Qt::Key keys);
 
+    signals:
+        void mouseCaptured();
+        void mouseReleased();
+
     private slots:
         void on_startButton_clicked();
 

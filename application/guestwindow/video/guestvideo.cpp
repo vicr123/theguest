@@ -47,6 +47,8 @@ GuestVideo::GuestVideo(QString guest, QWidget* parent) :
     connect(ui->spiceWidget, &QSpiceWidget::displayResized, this, [ = ](QSize size) {
         ui->spiceWidget->setFixedSize(size);
     });
+    connect(ui->spiceWidget, &QSpiceWidget::mouseCaptured, this, &GuestVideo::mouseCaptured);
+    connect(ui->spiceWidget, &QSpiceWidget::mouseReleased, this, &GuestVideo::mouseReleased);
 
     ui->stackedWidget->setCurrentAnimation(tStackedWidget::Fade);
 }
@@ -68,6 +70,7 @@ void GuestVideo::updateState() {
     switch (d->session->state()) {
         case GuestSession::Off:
             ui->stackedWidget->setCurrentWidget(ui->offPage);
+            ui->spiceWidget->releaseMouse();
             break;
         case GuestSession::Starting:
         case GuestSession::Running:

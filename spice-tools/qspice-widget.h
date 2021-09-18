@@ -81,6 +81,9 @@ class QSpiceWidget : public QWidget {
          */
         bool isConnectedWithDisplay() const;
 
+        void captureMouse();
+        void releaseMouse();
+
     signals:
         /*
          * Emitted, when display resize event occurred.
@@ -175,6 +178,9 @@ class QSpiceWidget : public QWidget {
          */
         void fileTransferIsCompleted();
 
+        void mouseCaptured();
+        void mouseReleased();
+
     private:
         QString                  guestName, connName;
         Qt::TransformationMode   tr_mode;
@@ -186,6 +192,9 @@ class QSpiceWidget : public QWidget {
         qreal                    zoom;
         int                      downloadProgress;
         bool                     scaled, is_FullScreen;
+
+        bool                     captured, prepareRelease, blockMouse;
+        QPoint                   lastMousePos;
 
     public:
         QSpiceSession*           spiceSession;

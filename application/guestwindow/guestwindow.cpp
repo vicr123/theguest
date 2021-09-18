@@ -100,6 +100,14 @@ GuestWindow::GuestWindow(QString guest, QWidget* parent) :
     connect(GuestManager::instance(), &GuestManager::guestsUpdated, this, [ = ] {
         if (!GuestManager::instance()->guestList().contains(guest)) this->deleteLater();
     });
+
+    connect(d->videoPage, &GuestVideo::mouseCaptured, this, [ = ] {
+        ui->releaseInstructionsLabel->setVisible(true);
+    });
+    connect(d->videoPage, &GuestVideo::mouseReleased, this, [ = ] {
+        ui->releaseInstructionsLabel->setVisible(false);
+    });
+    ui->releaseInstructionsLabel->setVisible(false);
 }
 
 GuestWindow::~GuestWindow() {

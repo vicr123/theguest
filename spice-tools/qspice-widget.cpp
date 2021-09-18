@@ -30,6 +30,7 @@
 #include <QFileDialog>
 #include <QPainter>
 #include <QMessageBox>
+#include <QShortcut>
 
 #define MARGIN 0
 
@@ -55,6 +56,9 @@ QSpiceWidget::QSpiceWidget(QWidget* parent) :
     downloadProgress = 0;
     scaled = false;
     is_FullScreen = false;
+    captured = false;
+    prepareRelease = false;
+    blockMouse = false;
 
     tr_mode = Qt::SmoothTransformation;
     img = Q_NULLPTR;
@@ -70,6 +74,11 @@ QSpiceWidget::QSpiceWidget(QWidget* parent) :
     setFocusPolicy(Qt::StrongFocus);
     installEventFilter( this );
     setContentsMargins(MARGIN, MARGIN, MARGIN, MARGIN);
+
+    QShortcut* releaseCaptureShortcut = new QShortcut(QKeySequence(Qt::ControlModifier | Qt::Key_Alt), this);
+    connect(releaseCaptureShortcut, &QShortcut::activated, this, [ = ] {
+        this->releaseMouse();
+    });
 }
 QSpiceWidget::~QSpiceWidget() {
     // set NULL for drop signals from
@@ -605,6 +614,11 @@ void QSpiceWidget::sendImageClipboardDataToGuest(QClipboard::Mode mode) {
 
 void QSpiceWidget::mainMouseUpdate() {
     //qDebug()<<"main: MouseUpdate";
+    int mouseMode = main->getMouseMode();
+    if (mouseMode == SPICE_MOUSE_MODE_CLIENT) {
+        //We have control of the mouse now, so release the mouse
+        this->releaseMouse();
+    }
 }
 
 void QSpiceWidget::usbDevAutoConnectFailed(QString& dev, QString& err) {
@@ -835,22 +849,51 @@ bool QSpiceWidget::eventFilter(QObject* object, QEvent* event) {
         //    d_X = d_Y = 0;
         //};
         QPoint position = ev->pos();//-QPoint(d_X, d_Y);
-        if ( 0 <= position.y() && position.y() <= 3 ) {
-            emit boarderTouched();
-        };
-        inputs->inputsPosition(
-            //ev->x()*zoom,
-            //ev->y()*zoom,
-            qRound(position.x() / zoom),
-            qRound(position.y() / zoom),
-            display->getChannelID(),
-            QtButtonsMaskToSpice(ev));
+
+        if (captured) {
+            if (blockMouse) {
+                blockMouse = false;
+                return true;
+            }
+
+            QPoint delta = position - lastMousePos;
+            inputs->inputsMotion(delta.x(), delta.y(), QtButtonsMaskToSpice(ev));
+
+            blockMouse = true;
+            QCursor::setPos(this->mapToGlobal(QPoint(this->width() / 2, this->height() / 2)));
+            lastMousePos = QPoint(this->width() / 2, this->height() / 2);
+        } else {
+            if ( 0 <= position.y() && position.y() <= 3 ) {
+                emit boarderTouched();
+            };
+            inputs->inputsPosition(
+                //ev->x()*zoom,
+                //ev->y()*zoom,
+                qRound(position.x() / zoom),
+                qRound(position.y() / zoom),
+                display->getChannelID(),
+                QtButtonsMaskToSpice(ev));
+
+        }
+
         return true;
     } else if ( event->type() == QEvent::MouseButtonPress ) {
         QMouseEvent* ev = static_cast<QMouseEvent*>(event);
         if ( ev == Q_NULLPTR ) return false;
-        inputs->inputsButtonPress(
-            QtButtonToSpice(ev), QtButtonsMaskToSpice(ev));
+
+        //See if we need to capture the mouse
+        int mouseMode = main->getMouseMode();
+        if (mouseMode == SPICE_MOUSE_MODE_CLIENT) { //We have control of the mouse, so capturing is not neccessary
+            inputs->inputsButtonPress(QtButtonToSpice(ev), QtButtonsMaskToSpice(ev));
+        } else {
+            if (captured) { //The mouse is already captured
+                inputs->inputsButtonPress(QtButtonToSpice(ev), QtButtonsMaskToSpice(ev));
+            } else {
+                //Capture the mouse instead of sending the mouse click
+                this->captureMouse();
+            }
+        }
+
         return true;
     } else if ( event->type() == QEvent::MouseButtonRelease ) {
         emit mouseClickedInto();
@@ -862,6 +905,11 @@ bool QSpiceWidget::eventFilter(QObject* object, QEvent* event) {
     } else if ( event->type() == QEvent::KeyPress ) {
         QKeyEvent* ev = static_cast<QKeyEvent*>(event);
         if ( ev == Q_NULLPTR ) return false;
+
+        Qt::KeyboardModifiers mods = ev->modifiers();
+        Qt::Key key = static_cast<Qt::Key>(ev->key());
+        prepareRelease = mods == (Qt::ControlModifier | Qt::AltModifier) && (ev->key() == Qt::Key_Alt || ev->key() == Qt::Key_Control);
+
         if ( ev->modifiers() & Qt::KeypadModifier ) {
             inputs->inputsQKeypadKeyPress(ev->key());
         } else {
@@ -871,6 +919,14 @@ bool QSpiceWidget::eventFilter(QObject* object, QEvent* event) {
     } else if ( event->type() == QEvent::KeyRelease ) {
         QKeyEvent* ev = static_cast<QKeyEvent*>(event);
         if ( ev == Q_NULLPTR ) return false;
+
+        Qt::KeyboardModifiers mods = ev->modifiers();
+        Qt::Key key = static_cast<Qt::Key>(ev->key());
+        if (((ev->modifiers() == Qt::AltModifier && ev->key() == Qt::Key_Control) || (ev->modifiers() == Qt::ControlModifier & ev->key() == Qt::Key_Alt)) && prepareRelease) {
+            this->releaseMouse();
+        }
+        prepareRelease = false;
+
         if ( ev->modifiers() & Qt::KeypadModifier ) {
             inputs->inputsQKeypadKeyRelease(ev->key());
         } else {
@@ -1078,6 +1134,25 @@ void QSpiceWidget::channelEvent(int _ev) {
         .arg(chanName)
         .arg(eventDescription);
     emit errMsg(msg);
+}
+
+void QSpiceWidget::captureMouse() {
+    if (captured) return;
+
+    QApplication::setOverrideCursor(QCursor(Qt::BlankCursor));
+    captured = true;
+    blockMouse = true;
+    QCursor::setPos(this->mapToGlobal(QPoint(this->width() / 2, this->height() / 2)));
+    lastMousePos = QPoint(this->width() / 2, this->height() / 2);
+    emit mouseCaptured();
+}
+
+void QSpiceWidget::releaseMouse() {
+    if (!captured) return;
+
+    QApplication::restoreOverrideCursor();
+    captured = false;
+    emit mouseReleased();
 }
 
 /* public slots */

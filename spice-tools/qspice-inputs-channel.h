@@ -20,7 +20,7 @@
 #define QSPICE_INPUTS_CHANNEL_H
 
 #if !defined(QSPICE_WIDGET_H_INSIDE) && !defined(QSPICE_WIDGET_COMPILATION)
-#warning "Only <qspice-widget.h> can be included directly"
+    #warning "Only <qspice-widget.h> can be included directly"
 #endif
 
 #include "qspice-channel.h"
@@ -28,95 +28,92 @@
 #include <QHash>
 #include <QVarLengthArray>
 
-class QScanCodeArray : public QVarLengthArray<uint>
-{
-public:
-    QScanCodeArray()
-    {
-    }
+class QScanCodeArray : public QVarLengthArray<uint> {
+    public:
+        QScanCodeArray() {
+        }
 
-    QScanCodeArray(uint code)
-    {
-        append(code);
-    }
+        QScanCodeArray(uint code) {
+            append(code);
+        }
 
-    QScanCodeArray(uint code1, uint code2)
-    {
-        append(code1);
-        append(code2);
-    }
+        QScanCodeArray(uint code1, uint code2) {
+            append(code1);
+            append(code2);
+        }
 
-    QScanCodeArray(uint code1, uint code2, uint code3)
-    {
-        append(code1);
-        append(code2);
-        append(code3);
-    }
+        QScanCodeArray(uint code1, uint code2, uint code3) {
+            append(code1);
+            append(code2);
+            append(code3);
+        }
 
-    QScanCodeArray(uint code1, uint code2, uint code3, uint code4)
-    {
-        append(code1);
-        append(code2);
-        append(code3);
-        append(code4);
-    }
+        QScanCodeArray(uint code1, uint code2, uint code3, uint code4) {
+            append(code1);
+            append(code2);
+            append(code3);
+            append(code4);
+        }
 
 };
 
 typedef QHash<int, QScanCodeArray> ScanCodeHash;
 
-class QSpiceInputsChannel : public QSpiceChannel
-{
-    Q_OBJECT
-public:
-    // Mouse
-    void inputsPosition(
+class QSpiceInputsChannel : public QSpiceChannel {
+        Q_OBJECT
+    public:
+        // Mouse
+        void inputsPosition(
             int x,
             int y,
             int display,
             int button_state);
 
-    void inputsButtonPress(int button, int button_state);
+        void inputsMotion(
+            int dx,
+            int dy,
+            int button_state);
 
-    void inputsButtonRelease(int button, int button_state);
+        void inputsButtonPress(int button, int button_state);
 
-    // keyboard
-    // SPICE protocol use PC AT scan codes
-    void inputsKeyPress(uint scancode);
-    void inputsKeyPressAndRelease(uint scancode);
-    void inputsKeyRelease(uint scancode);
-    void inputsSetKeyLocks(uint locks);
+        void inputsButtonRelease(int button, int button_state);
 
-    // Qt Virtual Keys (platform independant)
-    void inputsQKeyPress(int key);
-    void inputsQKeyRelease(int key);
-    void inputsQKeypadKeyPress(int key);
-    void inputsQKeypadKeyRelease(int key);
-    void inputsQSequenceKeyPress(int key);
-    void inputsQSequenceKeyRelease(int key);
+        // keyboard
+        // SPICE protocol use PC AT scan codes
+        void inputsKeyPress(uint scancode);
+        void inputsKeyPressAndRelease(uint scancode);
+        void inputsKeyRelease(uint scancode);
+        void inputsSetKeyLocks(uint locks);
 
-signals:
-    void inputsModifiers();
+        // Qt Virtual Keys (platform independant)
+        void inputsQKeyPress(int key);
+        void inputsQKeyRelease(int key);
+        void inputsQKeypadKeyPress(int key);
+        void inputsQKeypadKeyRelease(int key);
+        void inputsQSequenceKeyPress(int key);
+        void inputsQSequenceKeyRelease(int key);
 
-protected:
-    inline QSpiceInputsChannel(void *channel) :
-        QSpiceChannel(channel)
-    {
-        initCallbacks();
-        initScanCodeMap();
-        initKeypadScanCodeMap();
-        initSequenceScanCodeMap();
-    }
-    friend class QSpiceHelper;
+    signals:
+        void inputsModifiers();
 
-    void initCallbacks();
+    protected:
+        inline QSpiceInputsChannel(void* channel) :
+            QSpiceChannel(channel) {
+            initCallbacks();
+            initScanCodeMap();
+            initKeypadScanCodeMap();
+            initSequenceScanCodeMap();
+        }
+        friend class QSpiceHelper;
 
-private:
-    QHash<int, uint>    scanCodeHash, keypadScanCodeHash;
-    ScanCodeHash        sequenceCodeHash;
-    void                initScanCodeMap();
-    void                initKeypadScanCodeMap();
-    void                initSequenceScanCodeMap();
-    QScanCodeArray      QSequenceKeyToScanCode(int key);
+        void initCallbacks();
+
+    private:
+        QHash<int, uint>    scanCodeHash, keypadScanCodeHash;
+        ScanCodeHash        sequenceCodeHash;
+        void                initScanCodeMap();
+        void                initKeypadScanCodeMap();
+        void                initSequenceScanCodeMap();
+        QScanCodeArray      QSequenceKeyToScanCode(int key);
 };
 #endif // QSPICE_INPUTS_CHANNEL_H
